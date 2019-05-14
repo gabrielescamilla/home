@@ -4,17 +4,20 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" -- plugin start -- {{{
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
-
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+" }}}
 
-" Colorscheme
+" == Color Scheme == {{{
 Plugin 'altercation/vim-colors-solarized'
+" Only solarized for now
+" }}}
 
 " == Vinegar for netrw == {{{
 Plugin 'tpope/vim-vinegar'
@@ -39,7 +42,23 @@ Plugin 'tpope/vim-vinegar'
 " >> Press y. to yank an absolute path for the file under the cursor.
 " >> Press ~ to go home.
 " }}}
+" == Quick fix == {{{
+Plugin 'romainl/vim-qf'
+" collection of settings, commands and mappings put together to make working
+" with the location list/window and the quickfix list/window smoother
+" :help vim-qf
+" }}}
 
+" == FZF == {{{
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '/install --all' }
+Plugin 'junegunn/fzf.vim'
+" }}}
+
+" == IS == {{{
+Plugin 'haya14busa/is.vim'
+" }}}
+
+" == Example Plugins == {{{
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
@@ -56,7 +75,9 @@ Plugin 'tpope/vim-vinegar'
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
+" }}}
 
+" -- plugin end --- {{{
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -74,12 +95,10 @@ filetype plugin indent on    " required
 
 " }}}
 
-
 " == KEYBOARD == {{{
 " Set comma as leader key
 let mapleader = ","
 " }}}
-
 
 " == EDITOR == {{{
 " Enable mouse support
@@ -103,14 +122,20 @@ set background=dark
 let g:solarized_termcolors=256
 colorscheme solarized
 " to see spaces
-set listchars=tab:.\ ,trail:.
-set list
+"
+"
+"
+filetype plugin indent on
+" On pressing tab, insert 2 spaces
+set expandtab
+" show existing tab with 2 spaces width
 set tabstop=2
-set showtabline=2
+set softtabstop=2
+" when indenting with '>', use 2 spaces width
 set shiftwidth=2
 " }}}
 
-" == Folding == {{{
+" == FOLDING == {{{
 " Dir to persist folds
 set viewdir=$HOME/.vim/view
 " Fold options
@@ -143,4 +168,30 @@ endfunction
 nmap <Space> za
 " <leader>Space to focus on current fold
 nmap <leader><Space> zMzv:set foldminlines=1<cr>
+" }}}
+
+" == SEARCH == {{{
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in
+"  the .git/ folder)
+" --color: Search color options
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
+" Search in file
+" Hilight the search results
+set hlsearch
+" Begin searching immediately
+set incsearch
+" Case insensitive search by default, but switch to case sensitive when searching with uppercase
+set ignorecase
+set smartcase
+" Wrap searching around the EOF and BOF
+set wrapscan
 " }}}
