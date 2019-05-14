@@ -4,7 +4,6 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" -- plugin start -- {{{
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -12,7 +11,6 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-" }}}
 
 " == Color Scheme == {{{
 Plugin 'altercation/vim-colors-solarized'
@@ -42,6 +40,7 @@ Plugin 'tpope/vim-vinegar'
 " >> Press y. to yank an absolute path for the file under the cursor.
 " >> Press ~ to go home.
 " }}}
+
 " == Quick fix == {{{
 Plugin 'romainl/vim-qf'
 " collection of settings, commands and mappings put together to make working
@@ -55,7 +54,17 @@ Plugin 'junegunn/fzf.vim'
 " }}}
 
 " == IS == {{{
+" https://github.com/haya14busa/is.vim
+" Incremental search improved - succesor of incsearch.vim
 Plugin 'haya14busa/is.vim'
+" }}}
+
+" == ASTERISK == {{{
+Plugin 'haya14busa/vim-asterisk'
+" }}}
+
+" == RAILS == {{{
+Plugin 'tpope/vim-rails'
 " }}}
 
 " == Example Plugins == {{{
@@ -77,7 +86,6 @@ Plugin 'haya14busa/is.vim'
 " Plugin 'ascenator/L9', {'name': 'newL9'}
 " }}}
 
-" -- plugin end --- {{{
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -96,8 +104,26 @@ filetype plugin indent on    " required
 " }}}
 
 " == KEYBOARD == {{{
+"  
 " Set comma as leader key
 let mapleader = ","
+" On pressing tab, insert 2 spaces
+set expandtab
+" show existing tab with 2 spaces width
+set tabstop=2
+set softtabstop=2
+" when indenting with '>', use 2 spaces width
+set shiftwidth=2
+" Use the spaces defined for line tabs in front and <BS>
+set smarttab
+
+" visual Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
 " }}}
 
 " == EDITOR == {{{
@@ -106,33 +132,96 @@ set mouse=a
 " large history
 set history=1000
 set undolevels=1000
+" detect type of file and load plugin and indent files for them
+filetype plugin indent on
+" syntax highlighting
+syntax enable
+" Set to auto read when a file is changed from the outside
+set autoread
+" Fast saving
+nmap <leader>w :w!<cr>
+" :W sudo saves the file 
+" (useful for handling the permission-denied error)
+command W w !sudo tee % > /dev/null
 " show changed line count for commands
 set report=0
 " confirm closing unsaved files
 set confirm
-" cursor scloll lines margin
+" cursor scroll lines margin
 set scrolloff=3
 " numbers hybrid
 set number relativenumber
 set numberwidth=1
-" syntax highlighting
-syntax enable
-set background=dark
 " color scheme 
-let g:solarized_termcolors=256
-colorscheme solarized
-" to see spaces
-"
-"
-"
-filetype plugin indent on
-" On pressing tab, insert 2 spaces
-set expandtab
-" show existing tab with 2 spaces width
-set tabstop=2
-set softtabstop=2
-" when indenting with '>', use 2 spaces width
-set shiftwidth=2
+set background=dark
+
+" Enable 256 colors palette in Gnome Terminal
+if $COLORTERM == 'gnome-terminal'
+    set t_Co=256
+endif
+try 
+  let g:solarized_termcolors=256
+  colorscheme solarized
+catch
+  try
+    colorscheme desert
+  catch
+  endtry
+endtry
+
+" Set extra options when running in GUI mode
+if has("gui_running")
+    set guioptions-=T
+    set guioptions-=e
+    set t_Co=256
+    set guitablabel=%M\ %t
+endif
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+" Turn on the Wild menu
+set wildmenu
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+    set wildignore+=.git\*,.hg\*,.svn\*
+else
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+endif
+" Height of the command bar
+set cmdheight=2
+" Backspace familiar behavior
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+" Don't redraw while executing macros (good performance config)
+set lazyredraw 
+" For regular expressions turn magic on
+set magic
+" Show matching brackets when text indicator is over them
+set showmatch 
+" No annoying sound on errors
+set belloff=all
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+" Delete trailing white space on save, useful for some filetypes ;)
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+endif
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
 " }}}
 
 " == FOLDING == {{{
@@ -183,7 +272,10 @@ nmap <leader><Space> zMzv:set foldminlines=1<cr>
 "  the .git/ folder)
 " --color: Search color options
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " Search in file
 " Hilight the search results
 set hlsearch
@@ -194,4 +286,127 @@ set ignorecase
 set smartcase
 " Wrap searching around the EOF and BOF
 set wrapscan
+" Asterisk search word under cursor staying
+map *  <Plug>(asterisk-z*)
+map #  <Plug>(asterisk-z#)
+map g* <Plug>(asterisk-gz*)
+map g# <Plug>(asterisk-gz#)
+" To enable keepCursor feature:
+let g:asterisk#keeppos = 1
+" }}}
+
+" == BUFFERS == {{{
+" Close the current buffer
+map <leader>d :Bclose<cr>:tabclose<cr>gT
+
+map <tab> :bnext<cr>
+map <S-tab> :bprevious<cr>
+
+" Useful mappings for managing tabs
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove 
+map <leader>t<leader> :tabnext 
+
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+" Specify the behavior when switching between buffers 
+try
+  set switchbuf=useopen,usetab,newtab
+  set stal=2
+catch
+endtry
+
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" }}}
+
+" == FILES == {{{
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+" }}}
+
+" == HELPER FUNCTIONS == {{{
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    endif
+    return ''
+endfunction
+
+" Don't close window, when deleting a buffer
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
+
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
+
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
+
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
+endfunction
+
+function! CmdLine(str)
+    call feedkeys(":" . a:str)
+endfunction 
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+" }}}
+
+" == STATUS LINE == {{{
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" }}}
+
+" == SPELL CHECK == {{{
+" Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>s? z=
 " }}}
