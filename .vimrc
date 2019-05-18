@@ -64,7 +64,48 @@ Plugin 'haya14busa/vim-asterisk'
 " }}}
 
 " == RAILS == {{{
+" Hello world!. Press cs"' inside         => 'Hello world!'
+" Press cs'<q> to                         => <q>Hello world!</q>
+" To go full circle, press cst"           => \"Hello world!\"
+" To remove the delimiters , press ds".   => Hello world!
+" Press ysiw] (iw is a text object).      => [Hello] world!
+" Press: cs]{                             => { Hello } world!
+" Entire line with yssb or yss).          => ({ Hello } world!)
+" Revert to the original text: ds{ds)     => Hello world!
+" Emphasize hello: ysiw<em>               => <em>Hello</em> world!
+" Visual mode. S<p class="important">.    => <p class="important">
+"                                               <em>Hello</em> world!
+"                                            </p>
 Plugin 'tpope/vim-rails'
+" }}}
+
+" == MATCHIT == {{{
+" Enable matchit.vim for matching more with %
+runtime! macros/matchit.vim
+" }}}
+
+" == SURROUND == {{{
+" Press cs"' inside \"Hello world!\"            => 'Hello world!'
+" Press cs'<q>                                  => <q>Hello world!</q>
+" Press cst"                                    => \"Hello world!\"
+" To remove the delimiters entirely, press ds". => Hello world!
+" Press ysiw] (iw is a text object).            => [Hello] world!
+" Use } instead of { for no space): cs]{        => { Hello } world!
+" Line to parens yssb or yss).                  => ({ Hello } world!)
+" Revert to the original text: ds{ds)           => Hello world!
+" Emphasize hello: ysiw<em>                     => <em>Hello</em> world!
+" In Visual mode. S<p class="important">.       => <p class="important">
+"                                                     <em>Hello</em> world!
+"                                                  </p>
+Plugin 'git://github.com/tpope/vim-surround.git'
+" }}}
+
+" == GUTENTAGS == {{{
+Plugin 'ludovicchabant/vim-gutentags'
+" }}}
+
+" == TAGBAR == {{{
+Plugin 'majutsushi/tagbar'
 " }}}
 
 " == Example Plugins == {{{
@@ -121,9 +162,9 @@ set smarttab
 set lbr
 set tw=500
 
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
+set ai      "Auto indent
+set si      "Smart indent
+set wrap    "Wrap lines
 " }}}
 
 " == EDITOR == {{{
@@ -160,6 +201,7 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 try 
+  let g:solarized_termtrans=1
   let g:solarized_termcolors=256
   colorscheme solarized
 catch
@@ -205,7 +247,7 @@ set showmatch
 " No annoying sound on errors
 set belloff=all
 set noerrorbells
-set novisualbell
+set visualbell
 set t_vb=
 set tm=500
 " Delete trailing white space on save, useful for some filetypes ;)
@@ -286,14 +328,57 @@ set ignorecase
 set smartcase
 " Wrap searching around the EOF and BOF
 set wrapscan
+" de-highlight from search
+map <leader>x :nohlsearch<cr>
+" rg / ripgrep
+if executable('rg')
+  " use rg instead of grep for :grep
+  set grepprg=rg\ --no-heading\ --color=never
+endif
+
 " Asterisk search word under cursor staying
-map *  <Plug>(asterisk-z*)
-map #  <Plug>(asterisk-z#)
-map g* <Plug>(asterisk-gz*)
-map g# <Plug>(asterisk-gz#)
+" map *  <Plug>(asterisk-z*)
+" map #  <Plug>(asterisk-z#)
+" map g* <Plug>(asterisk-gz*)
+" map g# <Plug>(asterisk-gz#)
 " To enable keepCursor feature:
-let g:asterisk#keeppos = 1
+" let g:asterisk#keeppos = 1
 " }}}
+
+" == FZF == {{{
+" :Rg to search in files, with preview window
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%', '?'),
+  \   <bang>0)
+" Likewise, Files command with preview window
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+nnoremap <silent> <leader>f :Files<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>s :Rg<CR>
+nnoremap <silent> <leader>r :Rg<CR>
+nnoremap <silent> <leader>g :Rg<CR>
+nnoremap <silent> <leader>a :Windows<CR>
+nnoremap <silent> <leader>t :Windows<CR>
+nnoremap <c-p> :Windows<CR>
+nnoremap <silent> <leader>; :BLines<CR>
+nnoremap <silent> <leader>o :BTags<CR>
+nnoremap <silent> <leader>O :Tags<CR>
+nnoremap <silent> <leader>? :History<CR>
+nnoremap <silent> <leader>h :History:<CR>
+nnoremap <silent> <leader>gl :Commits<CR>
+nnoremap <silent> <leader>ga :BCommits<CR>
+imap <C-x><C-f> <plug>(fzf-complete-file)
+imap <C-x><C-l> <plug>(fzf-complete-line)
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+" }}}
+
 
 " == BUFFERS == {{{
 " Close the current buffer
@@ -338,6 +423,20 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set nobackup
 set nowb
 set noswapfile
+" }}}
+
+" == TAGS == {{{
+let g:gutentags_ctags_exclude=["vendor", "bundle", ".git"]
+let g:gutentags_ctags_tagfile = ".tags"
+" Tagbar
+let g:tagbar_autofocus=1
+let g:tagbar_compact=1
+" Don't map for i or <Space> so my mappings (folding, movement) can work as normal
+let g:tagbar_map_togglecaseinsensitive=''
+let g:tagbar_map_showproto=''
+"let g:tagbar_autoclose=1
+nnoremap <F8> :TagbarToggle<CR>
+nnoremap <leader>T :TagbarToggle<CR>
 " }}}
 
 " == HELPER FUNCTIONS == {{{
