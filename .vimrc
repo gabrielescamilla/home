@@ -1,5 +1,6 @@
 " vim: fdm=marker foldminlines=1
 "
+" GEG
 " == PLUGINS == {{{
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -108,6 +109,70 @@ Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'majutsushi/tagbar'
 " }}}
 
+" == SESSIONS == {{{
+Plugin 'airblade/vim-rooter'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+Plugin 'tpope/vim-obsession'
+" }}}
+
+" == STATUS == {{{
+Plugin 'w0rp/ale'
+Plugin 'itchyny/lightline.vim'
+" }}}
+
+" == GIT == {{{
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+" }}}
+
+" == UNIMPAIRED == {{{
+Plugin 'tpope/vim-unimpaired'
+" }}}
+
+" == LINEDIFF == {{{
+" A simple example:
+"def one
+"  two
+"end
+"
+"def two
+"  three
+"end
+"Visual Mode select lines of block 1
+"Execute :Linediff 
+"Visual Mode select lines of block 2
+"Execute :Linediff => vertical split the diff in new tab
+"The two buffers are temporary, but when any one of them is saved, its original buffer is UPDATED not saved. 
+"Executing the command :LinediffReset will delete the temporary buffers and remove the signs.
+"Executing a new :Linediff will do the same as :LinediffReset, but will also initiate a new diff process.
+Plugin 'AndrewRadev/linediff.vim'
+" }}}
+
+" == MUSTACHE == {{{
+Plugin 'mustache/vim-mustache-handlebars'
+" }}}
+
+" == COMMENTS == {{{
+Plugin 'scrooloose/nerdcommenter'
+" }}}
+
+" == BLOCKS == {{{
+" Helps to end certain structures automatically.
+" In Ruby, adds end after if, do, def and several other keywords.
+" In Vimscript, this amounts to appropriately adding endfunction, endif, etc.
+" There's also Bourne shell, Z shell, VB (don't ask), C/C++ preprocessor, Lua, Elixir, Haskell, Objective-C, Matlab, Crystal and Jinja templates support.
+" Follow the model of the autocmds in the plugin to set the three magic variables governing endwise's behavior.
+Plugin 'tpope/vim-endwise'
+" }}}
+
+" == RUBY == {{{
+Plugin 'vim-ruby/vim-ruby'
+"
+Plugin 'tpope/vim-cucumber'
+"
+" }}}
+
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -132,7 +197,6 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
-"
 " Brief help
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
@@ -141,13 +205,14 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-
 " }}}
 
 " == KEYBOARD == {{{
 "  
 " Set comma as leader key
 let mapleader = ","
+" Paste-mode where there is no autoindentation
+set pastetoggle=<F12>
 " On pressing tab, insert 2 spaces
 set expandtab
 " show existing tab with 2 spaces width
@@ -165,6 +230,13 @@ set tw=500
 set ai      "Auto indent
 set si      "Smart indent
 set wrap    "Wrap lines
+" }}}
+
+" == KEY MAPPINGS == {{{
+"start surround word 
+map <leader>cc ysiw
+"start surround line
+map <leader>cs yss
 " }}}
 
 " == EDITOR == {{{
@@ -210,6 +282,9 @@ catch
   catch
   endtry
 endtry
+
+" Highlight lines that are too long
+highlight OverLength ctermbg=1 ctermfg=white
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -264,6 +339,37 @@ if has("autocmd")
 endif
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
+" }}}
+
+" == SESSIONS == {{{
+" Helper methods to save and open sessions named by the current project
+function! SaveMySession()
+	execute 'SaveSession' xolox#session#path_to_name(getcwd())
+endfunction
+command! SaveMySession :call SaveMySession()
+function! OpenMySession()
+	execute 'OpenSession!' xolox#session#path_to_name(getcwd())
+endfunction
+command! OpenMySession :call OpenMySession()
+" Automatically save open sessions on close
+let g:session_autosave = 'yes'
+let g:session_autosave_periodic = 10
+" Automatically load default session if one exists
+let g:session_autoload = 'yes'
+" Disable session locks because they don't seem to be getting unlocked in many cases
+let g:session_lock_enabled = 'no'
+" Set g:session_default_name to be project-specific so vim-session will load project-specific sessions by default
+function! SetRoot()
+	let root = FindRootDirectory()
+	if root != ''
+		let g:session_default_name = xolox#session#path_to_name(root)
+	endif
+endfunction
+augroup SetRootAuCommands
+	autocmd!
+	" Depends on rooter so getcwd() returns project root
+	autocmd VimEnter * call SetRoot()
+augroup END
 " }}}
 
 " == FOLDING == {{{
@@ -379,6 +485,17 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 " }}}
 
+" == COPY/PASTE == {{{
+" ,y Copy host clipboard with
+map <leader>y "+y
+" ;y to yank the whole buffer to the X clipboard
+map ;y :%y<space>+<cr>
+" ,p ,P Paste from host clipboard
+map <leader>p :put +<cr>
+map <leader>P :put! +<cr>
+vmap <leader>p "+p
+vmap <leader>P "+P
+" }}}
 
 " == BUFFERS == {{{
 " Close the current buffer
@@ -492,11 +609,173 @@ endfunction
 " }}}
 
 " == STATUS LINE == {{{
+" Hide mode status since lightline includes it
+set noshowmode
 " Always show the status line
 set laststatus=2
+"lightline
+function! LightlineFugitive()
+	if exists('*fugitive#head') && fugitive#extract_git_dir(expand('%')) !=# ''
+		silent! let branch = fugitive#head()
+		return branch !=# '' ? branch : ''
+	endif
+	return ''
+endfunction
+function! LightlineTag()
+	silent! let currenttag = tagbar#currenttag('%s','')
+	return currenttag !=# '' ? currenttag : ''
+endfunction
+function! LightlineGutentags()
+	silent! let tagstatus = gutentags#statusline()
+	return tagstatus !=# '' ? 'Generating Tags' : ''
+endfunction
+function! LightlineMode()
+	return expand('%:t') ==# '__Tagbar__' ? 'Tagbar':
+		\ expand('%:t') ==# 'ControlP' ? 'CtrlP' :
+		\ &filetype ==# 'unite' ? 'Unite' :
+		\ &filetype ==# 'vimfiler' ? 'VimFiler' :
+		\ &filetype ==# 'vimshell' ? 'VimShell' :
+		\ lightline#mode()
+endfunction
+" Make tab names unique if they conflict
+function! LightlineTabFilename(n)
+	let buflist = tabpagebuflist(a:n)
+	let winnr = tabpagewinnr(a:n)
+	let bufnum = buflist[winnr - 1]
+	let bufname = expand('#'.bufnum.':t')
+	let buffullname = expand('#'.bufnum.':p')
+	let buffullnames = []
+	let bufnames = []
+	for i in range(1, tabpagenr('$'))
+		if i != a:n
+			let num = tabpagebuflist(i)[tabpagewinnr(i) - 1]
+			call add(buffullnames, expand('#' . num . ':p'))
+			call add(bufnames, expand('#' . num . ':t'))
+		endif
+	endfor
+	let i = index(bufnames, bufname)
+	if strlen(bufname) && i >= 0 && buffullnames[i] != buffullname
+		return substitute(buffullname, '.*/\([^/]\+/\)', '\1', '')
+	else
+		return strlen(bufname) ? bufname : '[No Name]'
+	endif
+endfunction
+function! LightlineLinterStatus() abort
+	let l:counts = ale#statusline#Count(bufnr(''))
 
+	let l:all_errors = l:counts.error + l:counts.style_error
+	let l:all_non_errors = l:counts.total - l:all_errors
+
+	return l:counts.total == 0 ? '' : printf(
+				\   '%dW %dE',
+				\   all_non_errors,
+				\   all_errors
+				\)
+endfunction
+let g:lightline = {
+\ 'colorscheme': 'solarized',
+\ 'component_function': {
+\   'gitbranch': 'LightlineFugitive',
+\   'tag': 'LightlineTag',
+\   'gutentags': 'LightlineGutentags',
+\   'mode': 'LightlineMode',
+\   'linterstatus': 'LightlineLinterStatus',
+\ },
+\ 'tab_component_function': {
+\   'filename': 'LightlineTabFilename',
+\ },
+\ 'active': {
+\   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'modified', 'gitbranch', 'filename', 'tag', 'gutentags', 'linterstatus' ] ],
+\   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+\ },
+\ 'inactive': {
+\   'left': [ ['relativepath' ] ],
+\   'right': [ [ 'lineinfo' ], [ 'percent' ] ]
+\ },
+\ 'tabline': {
+\   'left': [ [ 'tabs' ] ],
+\   'right': []
+\ },
+\ 'tab': {
+\   'active': [ 'tabnum', 'filename', 'modified' ],
+\   'inactive': [ 'tabnum', 'filename', 'modified' ]
+\ },
+\ }
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" }}}
+
+" == FILE TYPE SPECIFIC == {{{
+let g:surround_custom_mapping = {}
+let g:surround_custom_mapping._ = {
+\ 'p':  "<pre> \r </pre>",
+\ 'w':  "%w(\r)",
+\ }
+let g:surround_custom_mapping.help = {
+\ 'p':  "> \r <",
+\ }
+let g:surround_custom_mapping.ruby = {
+\ '-':  "<% \r %>",
+\ '=':  "<%= \r %>",
+\ '9':  "(\r)",
+\ '5':  "%(\r)",
+\ '%':  "%(\r)",
+\ 'w':  "%w(\r)",
+\ '#':  "#{\r}",
+\ '3':  "#{\r}",
+\ 'e':  "begin \r end",
+\ 'E':  "<<EOS \r EOS",
+\ 'i':  "if \1if\1 \r end",
+\ 'u':  "unless \1unless\1 \r end",
+\ 'c':  "class \1class\1 \r end",
+\ 'm':  "module \1module\1 \r end",
+\ 'd':  "def \1def\1\2args\r..*\r(&)\2 \r end",
+\ 'p':  "\1method\1 do \2args\r..*\r|&| \2\r end",
+\ 'P':  "\1method\1 {\2args\r..*\r|&|\2 \r }",
+\ }
+let g:surround_custom_mapping.javascript = {
+\ 'f':  "function(){ \r }"
+\ }
+
+let g:cucumber_preview_vertical = 1
+let g:ale_linters = {
+\   'ruby': ['rubocop'],
+\}
+let g:ale_lint_on_text_changed = 'never'
+
+augroup FileTypeThings
+	autocmd!
+	autocmd FileType python set omnifunc=pythoncomplete#Complete
+	autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+	autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+	autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+	autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+	autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+	autocmd FileType ruby set omnifunc=rubycomplete#Complete
+	autocmd FileType c set omnifunc=ccomplete#Complete
+
+	" Use spaces instead of tabs for ruby/python
+	au BufRead,BufNewFile *.py,*pyw set shiftwidth=4 softtabstop=4 expandtab
+	au Filetype ruby set shiftwidth=2 softtabstop=2 expandtab
+	au Filetype sql set shiftwidth=2 softtabstop=2 expandtab
+	au Filetype yaml set shiftwidth=2 softtabstop=2 expandtab
+	au Filetype cucumber set shiftwidth=2 softtabstop=2 expandtab
+	" Use vrspec as the compiler for ruby (custom shell script ssh dispatcher for vagrant ssh bundle exec rspec)
+	au Filetype ruby compiler rspec
+	au Filetype ruby set makeprg=vrspec
+	" Enable long-line highlighting
+	au Filetype ruby match OverLength /\%101v.*/
+	au Filetype sql match OverLength /\%81v.*/
+	au Filetype python match OverLength /\%101v.*/
+	au Filetype gitcommit match OverLength /\%81v.*/
+  " Ctrl-Space for completions. Heck Yeah!
+  inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
+              \ "\<lt>C-n>" :
+              \ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
+              \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
+              \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
+  imap <C-@> <C-Space>
+augroup END
 " }}}
 
 " == SPELL CHECK == {{{
@@ -508,4 +787,4 @@ map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
-" }}}
+"}}}
