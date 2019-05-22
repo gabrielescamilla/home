@@ -173,6 +173,10 @@ Plugin 'tpope/vim-cucumber'
 "
 " }}}
 
+" == COMPLETION {{{
+Plugin 'ervandew/supertab'
+" }}}
+
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
