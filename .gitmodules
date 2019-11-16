@@ -1,3 +1,3 @@
-[submodule ".vim/pack/plugins/vim-fugitive"]
-	path = .vim/pack/plugins/vim-fugitive
-	url = git://github.com/tpope/vim-fugitive.git
+[submodule "fzf"]
+	path = fzf
+	url = https://github.com/junegunn/fzf.git
