@@ -440,6 +440,8 @@ set smartcase
 set wrapscan
 " de-highlight from search
 map <leader>x :nohlsearch<cr>
+" reload .vimrc
+map <leader>v :source ~/.vimrc<cr>:LightlineReload<cr>
 " rg / ripgrep
 if executable('rg')
   " use rg instead of grep for :grep
@@ -690,7 +692,7 @@ let g:lightline = {
 \ },
 \ 'active': {
 \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'modified', 'gitbranch', 'filename', 'tag', 'gutentags', 'linterstatus' ] ],
-\   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+\   'right': [ [ 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
 \ },
 \ 'inactive': {
 \   'left': [ ['relativepath' ] ],
@@ -698,13 +700,22 @@ let g:lightline = {
 \ },
 \ 'tabline': {
 \   'left': [ [ 'tabs' ] ],
-\   'right': []
+\   'right': [ [ 'relativepath' ] ]
 \ },
 \ 'tab': {
 \   'active': [ 'tabnum', 'filename', 'modified' ],
 \   'inactive': [ 'tabnum', 'filename', 'modified' ]
 \ },
 \ }
+
+command! LightlineReload call LightlineReload()
+
+function! LightlineReload()
+  call lightline#init()
+  call lightline#colorscheme()
+  call lightline#update()
+endfunction
+
 " Format the status line
 " set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 " }}}
