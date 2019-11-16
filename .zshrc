@@ -5,7 +5,7 @@ export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 export PATH="/usr/local/sbin:$PATH"
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/gescamilla/.oh-my-zsh
+export ZSH="~/.home/.zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -119,7 +119,7 @@ alias de='docker exec -e COLUMNS="$(tput cols)" -e LINES="$(tput lines)" -ti'
 alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Command}}\t{{.Image}}"'
 
 # Java management
-source /Users/gescamilla/.sdkman/bin/sdkman-init.sh
+source ~/.sdkman/bin/sdkman-init.sh
 
 
 # do vim mode
