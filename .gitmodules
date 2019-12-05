@@ -22,12 +22,6 @@
 [submodule ".vim/bundle/fzf.vim"]
 	path = .vim/bundle/fzf.vim
 	url = https://github.com/junegunn/fzf.vim
-[submodule ".vim/bundle/is.vim"]
-	path = .vim/bundle/is.vim
-	url = https://github.com/haya14busa/is.vim
-[submodule ".vim/bundle/vim-asterisk"]
-	path = .vim/bundle/vim-asterisk
-	url = https://github.com/haya14busa/vim-asterisk
 [submodule ".vim/bundle/vim-rails"]
 	path = .vim/bundle/vim-rails
 	url = https://github.com/tpope/vim-rails
