@@ -82,3 +82,9 @@
 [submodule ".vim/bundle/supertab"]
 	path = .vim/bundle/supertab
 	url = https://github.com/ervandew/supertab
+[submodule ".vim/bundle/is.vim"]
+	path = .vim/bundle/is.vim
+	url = https://github.com/haya14busa/is.vim
+[submodule ".vim/bundle/vim-asterisk"]
+	path = .vim/bundle/vim-asterisk
+	url = https://github.com/haya14busa/vim-asterisk
