@@ -19,6 +19,14 @@ then
   apt install curl -y;
 fi
 
+# Add ripgrep
+if [ $( type rg 2>/dev/null | grep -c "/bin/rg") -eq 0 ];
+then
+  echo '㋡ Adding ripgrep'
+  curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+  dpkg -i ripgrep_11.0.2_amd64.deb
+fi
+
 # Add zshell
 if [ $(dpkg-query -W -f='${Status}' zsh 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
@@ -31,13 +39,6 @@ then
   chsh -s $(which zsh);
 fi
 
-# Add ripgrep
-if [ $( type rg 2>/dev/null | grep -c "/bin/rg") -eq 0 ];
-then
-  echo '㋡ Adding ripgrep'
-  curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-  dpkg -i ripgrep_11.0.2_amd64.deb
-fi
 
 # Add fd-find
 if [ $( type fd 2>/dev/null | grep -c "/bin/fd") -eq 0 ];

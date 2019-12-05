@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/gescamilla/.home'
+let g:netrw_dirhist_2='/Users/gescamilla/.home/bin'
+let g:netrw_dirhist_3='/Users/gescamilla/.home/bin/git'
+let g:netrw_dirhist_4='/Users/gescamilla/.home/bin'
+let g:netrw_dirhist_5='/Users/gescamilla/.home'
+let g:netrw_dirhist_6='/Users/gescamilla/.home/zsh'
+let g:netrw_dirhist_7='/Users/gescamilla/.home'

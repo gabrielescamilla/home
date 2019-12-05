@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+$pattern = $ARGV[0];
+$gcommand = $ARGV[1];
+# Iterate the lines from the input
+while(my $line = <STDIN>){
+	chomp($line);
+	$command = $gcommand;
+	# If there's a match, execute
+	if($line =~ qr/$pattern/){
+		$count = @-;
+		# Iterate the matches from the pattern
+		for($i = 1; $i < $count; $i++){
+			# Extract the match and build the command string
+			$arg = ${$i};
+			$cmdarg = "\%" . $i;
+			# Replace $cmdarg (should be %1, %2, etc) with $arg (whatever data was extracted from the match)
+			$command =~ s/$cmdarg/$arg/g;
+		}
+		# Replace %0 with the entire string
+		$command =~ s/\%0/$line/;
+		# Execute the command for this line
+		system $command;
+	}
+}

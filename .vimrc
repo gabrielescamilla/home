@@ -98,7 +98,7 @@ runtime! macros/matchit.vim
 " In Visual mode. S<p class="important">.       => <p class="important">
 "                                                     <em>Hello</em> world!
 "                                                  </p>
-Plugin 'git://github.com/tpope/vim-surround.git'
+Plugin 'tpope/vim-surround'
 " }}}
 
 " == GUTENTAGS == {{{
