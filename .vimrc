@@ -18,6 +18,11 @@ Plugin 'altercation/vim-colors-solarized'
 " Only solarized for now
 " }}}
 
+" == RltvNmbr == {{{
+Plugin 'vim-scripts/RltvNmbr.vim'
+" To display extra column with relative numbers
+" }}}
+
 " == Vinegar for netrw == {{{
 Plugin 'tpope/vim-vinegar'
 " >> Press - in any buffer to hop up to the directory listing and seek to the
@@ -266,9 +271,12 @@ set report=0
 set confirm
 " cursor scroll lines margin
 set scrolloff=3
-" numbers hybrid
-set number relativenumber
+" line numbers 
+set number 
 set numberwidth=1
+
+
+
 " color scheme 
 set background=dark
 
@@ -340,6 +348,8 @@ endfun
 
 if has("autocmd")
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufEnter * RltvNmbr
+    autocmd BufLeave * RltvNmbr!
 endif
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
