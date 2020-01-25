@@ -1,6 +1,0 @@
-#!/bin/bash
-source $(which shell-colors)
-
-echo "Stashing your uncommitted changes"
-echo -e "${bold}${yellow}:: git stash${reset}"
-git stash

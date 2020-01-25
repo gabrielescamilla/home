@@ -1,0 +1,13 @@
+# Setup fzf
+# ---------
+if [[ ! "$PATH" == */home/chivygab/.home/modules/fzf/bin* ]]; then
+  export PATH="${PATH:+${PATH}:}/home/chivygab/.home/modules/fzf/bin"
+fi
+
+# Auto-completion
+# ---------------
+[[ $- == *i* ]] && source "/home/chivygab/.home/modules/fzf/shell/completion.zsh" 2> /dev/null
+
+# Key bindings
+# ------------
+source "/home/chivygab/.home/modules/fzf/shell/key-bindings.zsh"
