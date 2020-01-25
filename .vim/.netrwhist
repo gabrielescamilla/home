@@ -1,3 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/Users/gescamilla/.home/zsh'
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/Users/gescamilla/dev/apps/autobahn/app/models'
+let g:netrw_dirhist_2='/Users/gescamilla/dev/apps/autobahn'
+let g:netrw_dirhist_3='/Users/gescamilla/dev/apps/autobahn/app'
+let g:netrw_dirhist_4='/Users/gescamilla/dev/apps/autobahn/app/models'
+let g:netrw_dirhist_5='/Users/gescamilla/dev/apps/autobahn'

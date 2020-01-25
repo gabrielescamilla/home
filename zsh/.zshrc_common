@@ -30,6 +30,14 @@ alias nnn="NNN_SHOW_HIDDEN=1 nnn -S"
 alias df="pydf 2>/dev/null || df -h"
 alias co="git checkout"
 
+# Platform dev
+export PLATFORM_DEV=$HOME/dev 
+shovel() ( $PLATFORM_DEV/script/run shovel "$@"; )
+alias de='docker exec -e COLUMNS="$(tput cols)" -e LINES="$(tput lines)" -ti'
+alias dps='docker ps --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Command}}\t{{.Image}}"' 
+fpath=($PLATFORM_DEV/misc/completion/ $fpath)
+autoload -U compinit && compinit
+
 mvln(){
 	# Get an absolute path for the target
 	tp="`dirname $2`/`basename $2`/"
