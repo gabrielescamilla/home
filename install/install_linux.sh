@@ -65,7 +65,7 @@ fi
 if [ $(command -v fzf  2>/dev/null | grep -c "bin/fzf") -eq 0 ];
 then
   echo '㋡ Adding fzf'
-  ~/.home/modules/fzf/install --all
+  ~/.home/submodules/fzf/install --all
 fi
 
 # Add devilspie
