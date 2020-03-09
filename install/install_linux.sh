@@ -1,9 +1,14 @@
-!/bin/bash
+#!/bin/zsh
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 uname -o | grep -q 'GNU/Linux' || { echo 'Ommiting GNU/Linux' && exit 0 ; }
+user=$(id -u)
+[[ user -eq 0 ]] || { echo "${YELLOW}☹ ${NC} Please run with ${RED}sudo${NC} \n" && exit 0 ; }
 echo '㋡ installing for GNU/Linux'
+
+# update packages
 apt update
-git pull || { echo 'Failed to pull, stopping here' && exit 1 ; }
-git submodule update --init --recursive
 
 # Add vim
 if [ $(dpkg-query -W -f='${Status}' vim 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -32,11 +37,6 @@ if [ $(dpkg-query -W -f='${Status}' zsh 2>/dev/null | grep -c "ok installed") -e
 then
   echo '㋡ Adding zsh'
   apt install zsh -y;
-fi
-if [ $($SHELL --version | grep -c "zsh") -eq 0 ];
-then
-  echo '㋡ Defaulting to zsh'
-  chsh -s $(which zsh);
 fi
 
 # Add fd-find
