@@ -10,6 +10,11 @@ then
   source ~/.home/install_osx.sh
 fi
 
+if [ $(uname | grep -c "Linux") -eq 1 ];
+then
+  source ~/.home/install_linux.sh
+fi
+
 # Map zsh
 for file in .zshrc .zpreztorc; do
 	if [[ ! -a "$HOME/$file" && ! -h "$HOME/$file" ]]; then

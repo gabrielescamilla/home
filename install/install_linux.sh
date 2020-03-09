@@ -33,12 +33,11 @@ then
   echo '㋡ Adding zsh'
   apt install zsh -y;
 fi
-if [ $($SHELL --version | grep -c "ok default shell") -eq 0 ];
+if [ $($SHELL --version | grep -c "zsh") -eq 0 ];
 then
   echo '㋡ Defaulting to zsh'
   chsh -s $(which zsh);
 fi
-
 
 # Add fd-find
 if [ $( type fd 2>/dev/null | grep -c "/bin/fd") -eq 0 ];
@@ -66,7 +65,14 @@ fi
 if [ $(command -v fzf  2>/dev/null | grep -c "bin/fzf") -eq 0 ];
 then
   echo '㋡ Adding fzf'
-  ~/.home/fzf/install --all
+  ~/.home/modules/fzf/install --all
+fi
+
+# Add devilspie
+if [ $(dpkg-query -W -f='${Status}' devilspie 2>/dev/null | grep -c "ok installed") -eq 0 ];
+then
+  echo '㋡ Adding devilspie'
+  apt install devilspie -y;
 fi
 
 type vim &>/dev/null || { echo 'vim not installed!' ; }
@@ -77,5 +83,6 @@ type fd &>/dev/null || { echo 'fd not installed!' ; }
 type fzf &>/dev/null || { echo 'fzf not installed!' ; }
 type tmux &>/dev/null || { echo 'tmux not installed!' ; }
 type pydf &>/dev/null || { echo 'pydf not installed!' ; }
+type devilspie &>/dev/null || { echo 'devilspie not installed' ; }
 
 echo '㋡ Installation complete'
