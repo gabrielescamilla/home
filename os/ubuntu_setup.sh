@@ -1,7 +1,7 @@
-!/bin/bash
+#!/bin/bash
 uname -o | grep -q 'GNU/Linux' || { echo 'Ommiting GNU/Linux' && exit 0 ; }
 echo '㋡ installing for GNU/Linux'
-apt update
+sudo apt update
 
 # Add vim
 if [ $(dpkg-query -W -f='${Status}' vim 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -29,10 +29,7 @@ fi
 if [ $(dpkg-query -W -f='${Status}' zsh 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo '㋡ Adding zsh'
-  apt install zsh -y;
-fi
-if [ $($SHELL --version | grep -c "ok default shell") -eq 0 ];
-then
+  sudo apt install zsh -y;
   echo '㋡ Defaulting to zsh'
   sudo chsh -s $(which zsh);
 fi
@@ -64,7 +61,7 @@ fi
 if [ $(command -v fzf  2>/dev/null | grep -c "bin/fzf") -eq 0 ];
 then
   echo '㋡ Adding fzf'
-  # ~/.home/fzf/install --all
+  sudo ~/.home/submodules/fzf/install --all
 fi
 
 type vim &>/dev/null || { echo 'vim not installed!' ; }

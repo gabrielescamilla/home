@@ -1,3 +1,6 @@
 [submodule "submodules/vundle"]
 	path = submodules/vundle
 	url = http://github.com/VundleVim/Vundle.Vim
+[submodule "submodules/fzf"]
+	path = submodules/fzf
+	url = https://github.com/junegunn/fzf.git
