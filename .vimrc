@@ -13,13 +13,15 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'tpope/vim-markdown'
+
 " == Color Scheme == {{{
 Plugin 'altercation/vim-colors-solarized'
 " Only solarized for now
 " }}}
 
 " == RltvNmbr == {{{
-Plugin 'vim-scripts/RltvNmbr.vim'
+"Plugin 'vim-scripts/RltvNmbr.vim'
 " To display extra column with relative numbers
 " }}}
 
@@ -122,7 +124,9 @@ Plugin 'tpope/vim-obsession'
 " }}}
 
 " == STATUS == {{{
-Plugin 'w0rp/ale'
+"Plugin 'w0rp/ale'
+" Async LINT engine
+Plugin 'dense-analysis/ale'
 Plugin 'itchyny/lightline.vim'
 " }}}
 
@@ -181,6 +185,15 @@ Plugin 'tpope/vim-cucumber'
 " == COMPLETION {{{
 Plugin 'ervandew/supertab'
 " }}}
+
+"  ELIXIR {
+Plugin 'elixir-editors/vim-elixir'
+" }
+"
+"  SVELTE {
+" Plugin 'evanleck/vim-svelte'
+Plugin 'leafOfTree/vim-svelte-plugin'
+" }
 
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
@@ -241,11 +254,15 @@ set si      "Smart indent
 set wrap    "Wrap lines
 " }}}
 
+
+
 " == KEY MAPPINGS == {{{
+" this maps were clashing with nerd commenter
 "start surround word 
-map <leader>cc ysiw
+"map <leader>cc ysiw
+"map <leader>cc <leader>cy
 "start surround line
-map <leader>cs yss
+"map <leader>cs yss
 " }}}
 
 " == EDITOR == {{{
@@ -273,9 +290,8 @@ set confirm
 set scrolloff=3
 " line numbers 
 set number 
-set numberwidth=1
-
-
+"set numberwidth=1
+"ctermbg=white
 
 " color scheme 
 set background=dark
@@ -287,6 +303,7 @@ endif
 try 
   let g:solarized_termtrans=1
   let g:solarized_termcolors=256
+  let g:solarized_contrast="high"
   colorscheme solarized
 catch
   try
@@ -297,6 +314,8 @@ endtry
 
 " Highlight lines that are too long
 highlight OverLength ctermbg=1 ctermfg=white
+" highlight line numbers
+highlight LineNr ctermfg=gray
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -346,11 +365,12 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-    autocmd BufEnter * RltvNmbr
-    autocmd BufLeave * RltvNmbr!
-endif
+
+"if has("autocmd")
+"    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+"    autocmd BufEnter * RltvNmbr
+"    autocmd BufLeave * RltvNmbr!
+"endif
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 " }}}
@@ -763,10 +783,12 @@ let g:surround_custom_mapping.javascript = {
 \ }
 
 let g:cucumber_preview_vertical = 1
-let g:ale_linters = {
-\   'ruby': ['rubocop'],
-\}
-let g:ale_lint_on_text_changed = 'never'
+
+let g:ale_linters = {'ruby': ['standardrb']}
+let g:ale_fixers = {'ruby': ['standardrb']}
+let g:ale_fix_on_save = 1
+let g:ale_enabled = 1
+"let g:ale_lint_on_text_changed = 'never'
 
 augroup FileTypeThings
 	autocmd!
@@ -813,3 +835,7 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 "}}}
+"
+
+" To open files in VS Code
+:command! OpenCwdInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!

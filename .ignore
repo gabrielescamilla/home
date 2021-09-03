@@ -1,1 +1,8 @@
 .tags
+.ruby-version
+.tool-versions
+.idea
+.tareas
+.idea
+*.iml
+myrun.sh

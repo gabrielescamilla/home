@@ -29,14 +29,25 @@ alias -g l="| less"
 alias nnn="NNN_SHOW_HIDDEN=1 nnn -S"
 alias df="pydf 2>/dev/null || df -h"
 alias co="git checkout"
+alias doit!="sudo $(history -p !!)"
+
+# Postgres
+alias pgup="launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"
+alias pgdown="launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"
+
+# Image magic
+#export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+
 
 # Platform dev
 export PLATFORM_DEV=$HOME/dev 
 shovel() ( $PLATFORM_DEV/script/run shovel "$@"; )
 alias de='docker exec -e COLUMNS="$(tput cols)" -e LINES="$(tput lines)" -ti'
-alias dps='docker ps --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Command}}\t{{.Image}}"' 
+# alias dps='docker ps --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Command}}\t{{.Image}}"' 
+alias dps='docker ps —format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Command}}\t{{.Image}}"'
 fpath=($PLATFORM_DEV/misc/completion/ $fpath)
 autoload -U compinit && compinit
+autoload -U bashcompinit && bashcompinit
 
 mvln(){
 	# Get an absolute path for the target
@@ -56,7 +67,18 @@ mvln(){
 	mv "$s" "$t" && ln -s "$t" "$s"
 }
 
+# Lang Manager
+. ~/.home/asdf/asdf.sh
+# append completions to fpath
+fpath=(${ASDF_DIR}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit
+compinit
+
 # Load any local zshrc overrides
 if [ -s ~/.zshrc_local ]; then
 	. ~/.zshrc_local
 fi
+
+export GOBIN=~/.go/bin
+export PATH=$GOBIN:$PATH

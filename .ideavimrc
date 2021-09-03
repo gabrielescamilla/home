@@ -1,0 +1,9 @@
+set visualbell
+set noerrorbells
+let mapleader = "\"
+nmap <leader>a :action $SelectAll<CR>
+nmap <leader>c :action $Copy<CR>
+nmap <leader>v :action $Paste<CR>
+nmap <leader>x :action $Cut<CR>
+nmap <A-Space> :action CollapseRegionRecursively <cr>
+nmap <Space> :action ExpandRegionRecursively <cr>
