@@ -196,7 +196,7 @@ Plugin 'leafOfTree/vim-svelte-plugin'
 " }
 "
 
-Plugin 'vimwiki/vimwiki'
+Plugin 'vimwiki/vimwiki', {'branch': 'dev'}
 
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
