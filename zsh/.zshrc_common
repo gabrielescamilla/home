@@ -30,6 +30,7 @@ alias nnn="NNN_SHOW_HIDDEN=1 nnn -S"
 alias df="pydf 2>/dev/null || df -h"
 alias co="git checkout"
 alias doit!="sudo $(history -p !!)"
+alias groups="defaults read com.jamf.connect.state UserGroups"
 
 # Postgres
 alias pgup="launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"

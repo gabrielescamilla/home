@@ -194,6 +194,9 @@ Plugin 'elixir-editors/vim-elixir'
 " Plugin 'evanleck/vim-svelte'
 Plugin 'leafOfTree/vim-svelte-plugin'
 " }
+"
+
+Plugin 'vimwiki/vimwiki'
 
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
@@ -272,7 +275,7 @@ set mouse=a
 set history=1000
 set undolevels=1000
 " detect type of file and load plugin and indent files for them
-filetype plugin indent on
+" repeated entry -> filetype plugin indent on
 " syntax highlighting
 syntax enable
 " Set to auto read when a file is changed from the outside
@@ -541,6 +544,7 @@ map <tab> :bnext<cr>
 map <S-tab> :bprevious<cr>
 
 " Useful mappings for managing tabs
+"map <leader>t? conflicted with QickTask
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove 
@@ -836,6 +840,10 @@ map <leader>sa zg
 map <leader>s? z=
 "}}}
 "
+" Vim Wiki
+nmap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
+let g:vimwiki_list = [{'path': '~/Documents/notes/', 'syntax': 'markdown', 'index': 'main', 'ext': '.md'}]
+au FileType vimwiki setlocal shiftwidth=6 tabstop=6 noexpandtab"
 
 " To open files in VS Code
 :command! OpenCwdInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
