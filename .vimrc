@@ -846,8 +846,8 @@ map <leader>s? z=
 "
 " Vim Wiki
 "nmap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
-"let g:vimwiki_list = [{'path': '~/Documents/notes/', 'syntax': 'markdown', 'index': 'main', 'ext': '.md'}]
-"au FileType vimwiki setlocal shiftwidth=6 tabstop=6 noexpandtab"
+let g:vimwiki_list = [{'path': '~/Documents/notes/', 'syntax': 'markdown', 'index': 'main', 'ext': '.md'}]
+au FileType vimwiki setlocal shiftwidth=6 tabstop=6 noexpandtab"
 
 " To open files in VS Code
 :command! OpenCwdInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
