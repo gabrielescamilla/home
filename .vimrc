@@ -197,6 +197,7 @@ Plugin 'leafOfTree/vim-svelte-plugin'
 "
 
 Plugin 'vimwiki/vimwiki', {'branch': 'dev'}
+Plugin 'blindFS/vim-taskwarrior'
 
 " == Example Plugins == {{{
 " The following are examples of different formats supported.
@@ -583,7 +584,9 @@ set noswapfile
 " }}}
 
 " == TAGS == {{{
-let g:gutentags_ctags_exclude=["vendor", "bundle", ".git"]
+"let g:gutentags_ctags_exclude=["vendor", "bundle", ".git"]
+"let g:gutentags_trace = 1
+let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor", "bundle", ".git", "node_modules", "*.vim/bundle/*"]
 let g:gutentags_ctags_tagfile = ".tags"
 " Tagbar
 let g:tagbar_autofocus=1
@@ -655,7 +658,8 @@ set noshowmode
 set laststatus=2
 "lightline
 function! LightlineFugitive()
-	if exists('*fugitive#head') && fugitive#extract_git_dir(expand('%')) !=# ''
+	"if exists('*fugitive#head') && fugitive#extract_git_dir FugitiveExtractGitDir(expand('%')) !=# ''
+	if exists('*fugitive#head') && FugitiveExtractGitDir(expand('%')) !=# ''
 		silent! let branch = fugitive#head()
 		return branch !=# '' ? branch : ''
 	endif
@@ -841,9 +845,9 @@ map <leader>s? z=
 "}}}
 "
 " Vim Wiki
-nmap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
-let g:vimwiki_list = [{'path': '~/Documents/notes/', 'syntax': 'markdown', 'index': 'main', 'ext': '.md'}]
-au FileType vimwiki setlocal shiftwidth=6 tabstop=6 noexpandtab"
+"nmap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
+"let g:vimwiki_list = [{'path': '~/Documents/notes/', 'syntax': 'markdown', 'index': 'main', 'ext': '.md'}]
+"au FileType vimwiki setlocal shiftwidth=6 tabstop=6 noexpandtab"
 
 " To open files in VS Code
 :command! OpenCwdInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
