@@ -13,6 +13,9 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+" Kotlin
+Plugin 'udalov/kotlin-vim'
+
 " == Color Scheme == {{{
 Plugin 'altercation/vim-colors-solarized'
 " Only solarized for now
@@ -41,6 +44,8 @@ Plugin 'tpope/vim-vinegar'
 " >> Press y. to yank an absolute path for the file under the cursor.
 " >> Press ~ to go home.
 " }}}
+
+Plugin 'elixir-editors/vim-elixir'
 
 " == Quick fix == {{{
 Plugin 'romainl/vim-qf'
