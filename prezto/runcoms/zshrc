@@ -25,6 +25,7 @@ alias nnn="NNN_SHOW_HIDDEN=1 nnn -S"
 alias df="pydf 2>/dev/null || df -h"
 alias co="git checkout"
 alias vim="nvim"
+alias dad="python manage.py"
 
 setopt EXTENDED_GLOB
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"

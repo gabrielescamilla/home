@@ -11,9 +11,9 @@
 # Use the command 'task show' to see all defaults and overrides
 
 # Files
-# data.location=~/.home/tasks
+ data.location=~/.home/tasks
 # data.location=~/Documents/obsidian/tasks
-data.location=~/obsidian/ANAHUAC/resources/tasks
+#data.location=~/obsidian/ANAHUAC/resources/tasks
 
 # Color theme (uncomment one to use)
 #include /usr/local/Cellar/task/2.6.2_1/share/doc/task/rc/light-16.theme
