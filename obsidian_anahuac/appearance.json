@@ -1,0 +1,16 @@
+{
+  "accentColor": "#0282e3",
+  "cssTheme": "AnuPpuccin",
+  "theme": "obsidian",
+  "interfaceFontFamily": "MesloLGS NF",
+  "textFontFamily": "MesloLGS NF",
+  "monospaceFontFamily": "MesloLGS NF",
+  "baseFontSize": 14,
+  "translucency": false,
+  "enabledCssSnippets": [
+    "cards",
+    "extended-colorschemes"
+  ],
+  "nativeMenus": true,
+  "showViewHeader": true
+}

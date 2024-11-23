@@ -1,0 +1,20 @@
+{
+  "vimMode": true,
+  "livePreview": false,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "inbox/notes",
+  "attachmentFolderPath": "attachments",
+  "userIgnoreFilters": [
+    "P.A.R.A/resources/attachments/",
+    "P.A.R.A/archive/",
+    "CORE/"
+  ],
+  "tabSize": 2,
+  "promptDelete": false,
+  "defaultViewMode": "preview",
+  "showLineNumber": true,
+  "showIndentGuide": false,
+  "showRibbon": false,
+  "showInlineTitle": true
+}
