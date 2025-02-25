@@ -6,6 +6,7 @@ filename=$1
 # Ripgrep and completion
 brew install ripgrep
 brew install fzf
+ln -s ${HOME}/.home/fzf.zsh ${HOME}/.fzf.zsh
 
 # Intall neovim
 brew install 
